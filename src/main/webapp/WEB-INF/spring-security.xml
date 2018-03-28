@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                                 http://www.springframework.org/schema/security
+                                 http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+    
+    	<http auto-config="true" use-expressions="true">
+		 <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/prodAdminList" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/addProduct" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateProduct" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/deleteProduct" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/suppAdminList" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/addSupplier" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateSupplier**" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/deleteSupplier" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/catAdminList" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/addCategory" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateCategory**" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/deleteCategory" access="hasRole('ROLE_ADMIN')"/>
+		<!-- <intercept-url pattern="/homeProducts" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateHomeProducts" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateHomeProduct" access="hasRole('ROLE_ADMIN')"/> -->
+		
+		
+		<intercept-url pattern="/index/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		 <intercept-url pattern="/showCart" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/addToCart" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateCart" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/deleteCartItem" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/myAccount" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/changePass" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/updateUser" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/BuyNow" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/checkOut" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/myOrders" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/placeOrder" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		<intercept-url pattern="/Details" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+		
+		<!-- access denied page -->
+		<access-denied-handler error-page="/403Error" />
+		<form-login 
+		    login-page="/login" 
+		    default-target-url="/" 
+		    login-processing-url="/perform_login"
+		    authentication-success-forward-url="/login_success"
+			authentication-failure-url="/login?id=1" 
+			username-parameter="username"
+			password-parameter="password"/>
+		<logout logout-url="/perform_logout" 
+		invalidate-session="true"
+		logout-success-url="/login?id=2"  />
+		<csrf disabled="true"/>
+	</http>
+	
+    <authentication-manager>
+	  <authentication-provider>
+	   <jdbc-user-service authorities-by-username-query="select email, role from user where email =? " 
+	  	users-by-username-query="select email,password, TRUE as enabled from user where email=?" 
+	  	data-source-ref="dataSource"/>
+	     <!-- <user-service>
+		<user name="kunal" password="password" authorities="ROLE_USER" />
+		<user name="admin" password="password" authorities="ROLE_ADMIN" />
+	   </user-service>   -->
+	  </authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
